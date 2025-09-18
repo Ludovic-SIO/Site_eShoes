@@ -11,7 +11,6 @@
             "port": 9003,
             "pathMappings": {
             "C:\\Users\\lchamprobert\\symfony1": "${workspaceFolder}"
-            //"C:\\xampp\\htdocs\\symfony7": "${workspaceFolder}"
             }
         }
     ] 
