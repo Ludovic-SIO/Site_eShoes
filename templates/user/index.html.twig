@@ -25,6 +25,9 @@
             <td>{{user.lastName}}</td>
             <td>
                 {% if ("ROLE_ADMIN" in user.roles) %}  
+                <span class="text-primary">administrateur</span>
+
+                {% if ("ROLE_ADMIN" in user.roles) %}  
                     <span class="text-primary">administrateur</span>
                 {% elseif ("ROLE_EDITOR" in user.roles) %} 
                     <span class="text-primary">editeur</span>
@@ -32,7 +35,7 @@
                     <span class="text-primary">client</span>
                 {% endif %}
 
-                {{% if ("ROLE_ADMIN" in user.roles) == false %}}
+                {% if ("ROLE_ADMIN" in user.roles) == false %}
                 {% if ("ROLE_EDTOR" in user.roles) == false %}
                     <a onclick="return confirm('Voulez-vous vraiment affecter le rôle éditeur à l\'utilisateur ?')" 
                     class="btn btn-outline-primary" href="{{path('app_user_add_editor_role',{'id' : user.id}) 
