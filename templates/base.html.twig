@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,6 +17,10 @@
         <meta name="viewport" content="width=device-witdth, initial-scale-1">
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block navbar %}
+        {% include 'layouts/nav.html.twig' %}
+        {% endblock %}
+        {% block body %}
+        {% endblock %}
     </body>
 </html>
