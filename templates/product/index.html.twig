@@ -1,9 +1,9 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Product index{% endblock %}
+{% block title %}Produits{% endblock %}
 
 {% block body %}
-    <h1>Product index</h1>
+    <h1>Produits</h1>
 
     <table class="table">
         <thead>
@@ -11,8 +11,9 @@
                 <th>Id</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Price</th>
-                <th>actions</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,16 +21,24 @@
             <tr>
                 <td>{{ product.id }}</td>
                 <td>{{ product.name }}</td>
-                <td>{{ product.description|slice(0,10) }}</td>
+                <td>{{ product.description|slice(0,100)}}</td>
                 <td>{{ product.price }}</td>
+
+                {% if product.stock > 0 %}
+                        <td>{{ product.stock }}</td>
+                {% else %}
                 <td>
-                    <a href="{{ path('app_product_show', {'id': product.id}) }}">Voir</a>
-                    <a href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
+                    <span class="text-danger">Stock épuisé</span>
+                </td>
+                {% endif %}
+                <td>
+                    <a class ="btn btn-outline-primary" href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a>
+                    <a "btn btn-outline-secondary" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
                 </td>
             </tr>
         {% else %}
             <tr>
-                <td colspan="5">aucun produit trouvés</td>
+                <td colspan="5">Aucun produit trouvés</td>
             </tr>
         {% endfor %}
         </tbody>

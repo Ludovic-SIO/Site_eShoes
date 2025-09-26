@@ -37,9 +37,40 @@ class Product
     #[ORM\ManyToMany(targetEntity: SubCategory::class, inversedBy: 'products')]
     private Collection $subCategories;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image = null;
+
+    #[ORM\Column]
+    private ?int $stock = null;
+
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'products')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?self $product = null;
+
+    /**
+     * @var Collection<int, self>
+     */
+    #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $products;
+
+    #[ORM\Column]
+    private ?int $qte = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    /**
+     * @var Collection<int, AddProductHistory>
+     */
+    #[ORM\OneToMany(targetEntity: AddProductHistory::class, mappedBy: 'product', orphanRemoval: true)]
+    private Collection $addProductHistories;
+
+
     public function __construct()
     {
         $this->subCategories = new ArrayCollection();
+        $this->products = new ArrayCollection();
+        $this->addProductHistories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -106,4 +137,129 @@ class Product
 
         return $this;
     }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(?string $image): static
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    public function getStock(): ?int
+    {
+        return $this->stock;
+    }
+
+    public function setStock(int $stock): static
+    {
+        $this->stock = $stock;
+
+        return $this;
+    }
+
+    public function getProduct(): ?self
+    {
+        return $this->product;
+    }
+
+    public function setProduct(?self $product): static
+    {
+        $this->product = $product;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(self $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(self $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getProduct() === $this) {
+                $product->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getQte(): ?int
+    {
+        return $this->qte;
+    }
+
+    public function setQte(int $qte): static
+    {
+        $this->qte = $qte;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AddProductHistory>
+     */
+
+    /**
+     * @return Collection<int, AddProductHistory>
+     */
+    public function getAddProductHistories(): Collection
+    {
+        return $this->addProductHistories;
+    }
+
+    public function addAddProductHistory(AddProductHistory $addProductHistory): static
+    {
+        if (!$this->addProductHistories->contains($addProductHistory)) {
+            $this->addProductHistories->add($addProductHistory);
+            $addProductHistory->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAddProductHistory(AddProductHistory $addProductHistory): static
+    {
+        if ($this->addProductHistories->removeElement($addProductHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($addProductHistory->getProduct() === $this) {
+                $addProductHistory->setProduct(null);
+            }
+        }
+
+        return $this;
+    }
+   
 }
