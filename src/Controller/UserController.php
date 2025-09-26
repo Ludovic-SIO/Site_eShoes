@@ -11,12 +11,14 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UserController extends AbstractController
 {
     #[Route('/admin/user', name: 'app_user')]
-    public function index(): Response
+    public function index(UserRepository $userRepository): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-        ]);
+    $users = $userRepository->findAll();
+    return $this->render('user/index.html.twig', [
+        'users' => $users,
+    ]);
     }
+
 
     
     #[Route('/admin/user/{id}/add/editor', name: 'app_user_add_editor_role')]

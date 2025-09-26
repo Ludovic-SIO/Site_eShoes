@@ -1,4 +1,11 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+
+<label for="">{{ form_label(form.name, 'Nom du produit :') }}</label>
+{{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'nom'}}) }}
+{{ form_errors(form.name) }}
+
+{{ form_rest(form) }}
+
+<button class="btn btn-primary">{{ button_label|default('Save') }}</button>
+
 {{ form_end(form) }}

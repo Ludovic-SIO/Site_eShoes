@@ -5,7 +5,7 @@
 {% block body %}
 <div class="container">
     <br>
-<h1>Catégories</h1>
+<h1>Liste des sous-catégories</h1>
 {% include 'layouts/_flash_message.html.twig' %}
     <br>
     <table class="table">
@@ -18,7 +18,7 @@
     </tr>
     </thead>
     <tbody>
-        {% for sub category in sub categories %}
+        {% for sub_category in sub_categories %}
         <td>
             <td>{{sub_category.id}}</td>
             <td>{{sub_category.name}}</td>
