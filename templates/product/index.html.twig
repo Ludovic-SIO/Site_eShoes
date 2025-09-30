@@ -34,6 +34,7 @@
                 <td>
                     <a class ="btn btn-outline-primary" href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a>
                     <a "btn btn-outline-secondary" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
+                    <a class="btn btn-outline-info" href="{{ path('app_product_stock_add',{'id': product.id}) }}">Ajout stock</a>
                 </td>
             </tr>
         {% else %}

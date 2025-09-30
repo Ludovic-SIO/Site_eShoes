@@ -43,21 +43,26 @@ class Product
     #[ORM\Column]
     private ?int $stock = null;
 
+    /*
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'products')]
     #[ORM\JoinColumn(nullable: false)]
     private ?self $product = null;
+    */
 
     /**
      * @var Collection<int, self>
      */
+    /*
     #[ORM\OneToMany(targetEntity: self::class, mappedBy: 'product', orphanRemoval: true)]
     private Collection $products;
+
 
     #[ORM\Column]
     private ?int $qte = null;
 
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
+    */
 
     /**
      * @var Collection<int, AddProductHistory>
@@ -69,7 +74,7 @@ class Product
     public function __construct()
     {
         $this->subCategories = new ArrayCollection();
-        $this->products = new ArrayCollection();
+        //$this->products = new ArrayCollection();
         $this->addProductHistories = new ArrayCollection();
     }
 
@@ -204,6 +209,7 @@ class Product
         return $this;
     }
 
+    /*    
     public function getQte(): ?int
     {
         return $this->qte;
@@ -227,6 +233,7 @@ class Product
 
         return $this;
     }
+        */
 
     /**
      * @return Collection<int, AddProductHistory>
