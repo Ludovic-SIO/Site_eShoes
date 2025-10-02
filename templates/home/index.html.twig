@@ -6,25 +6,31 @@
 <div class="container">
 <br>
     <h1>Produits</h1>
-    <div class="col-md-3 mt-4">
-        <div class="card" style="width: 20vh;">
-        {% if product.image %}
-        <a href="{{ path('app_home_product_show', {'id' : product.id}) 
-        }}"><img src="{{ asset ('uploads/image/' ~ product.image)}}"
-        class="card-img-top" alt="{{ product.name }}"></a>
+    <div class="row">
+        {% for product in products %}
+            <div class="col-md-2 mt-4">
+                <div class="card" style="width: 20vh;">
+                    {% if product.image %}
+                        <a href="{{ path('app_home_product_show', {'id' : product.id}) 
+                        }}"><img src="{{ asset ('uploads/images/' ~ product.image)}}"
+                        class="card-img-top" alt="{{ product.name }}"></a>
+                    {% else %}
+                        <img src="{{ asset ('upload/images/no_image_available_500x350.png')
+                        }}" class="card-img-top" alt="Placholder image">
+                    {% endif %}
+                    <div class="card-body">
+                         <a style="text-decoration: none" href="{{
+                        path('app_home_product_show', {'id': product.id}) }}">
+                        <h5 class="card-title">{{ product.name }}</h5></a>
+                        <p class="card-text text-truncate">{{ product.description}}</p>
+                        <h3>{{ product.price }}</h3>
+                        <a href="#" class="btn btn-outline-success">Ajouter au panier</a>
+                    </div>
+                </div>
+            </div>
         {% else %}
-            <img src="{{ asset ('upload/images/no_image_available_500x350.png')
-            }}" class="card-img-top" alt="Placholder image">
-        {% endif %}
-        <div class="card-body">
-             <a style="text-decoration: none" href="{{
-             path('app_home_product_show',{{'id': product.id}}) }}"> <h5
-             class="card-title">{{product.name}}</h5> </a>
-        
-            <p class="card-text text-truncate">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-            <a href="#" class="btn btn-outline-suc">Go somewhere</a>
-        </div>
+            <p>Aucun produit disponible.</p>
+        {% endfor %}
     </div>
-</div>
-
+</div>  
 {% endblock %}

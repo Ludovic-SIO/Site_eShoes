@@ -6,7 +6,7 @@
 <div class="container mt-4">
     <h1>Créer un nouveau produit</h1>
 
-    {{ include('product/_form.html.twig', { button_label: 'Créer' }) }}
+    {{ include ('product/_form.html.twig')}}
 
     <a href="{{ path('app_product_index') }}" class="btn btn-link mt-3">Retour à la liste</a>
 </div>

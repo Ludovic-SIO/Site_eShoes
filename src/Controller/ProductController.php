@@ -52,8 +52,7 @@ final class ProductController extends AbstractController
                 $originalName =pathinfo($image->getClientOriginalName(),
                 PATHINFO_FILENAME);
                 $safeFileName =$slugger->slug($originalName);
-                $newFileName =$safeFileName.'_'.uniqid().'.'.$image->
-                guessExtension();
+                $newFileName =$safeFileName.'_'.uniqid().'.'.$image->guessExtension();
 
                 try{
                     $image->move(
