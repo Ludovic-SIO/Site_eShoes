@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+ 
+{% block title %}Your Cart{% endblock %}
+ 
+{% block body %}
+<div class="container">
+    <br>
+    <h1>Votre panier</h1>
+    {% include 'layouts/_flash_message.html.twig' %}
+        <br>
+        {% if items is empty %}
+            <p>Votre panier est vide.</p>
+        {% else %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nom du produit</th>
+                        <th>Quantité</th>
+                        <th>Prix</th>
+                        <th>Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            <td>{{ item.quantity }}
+                            <a href="{{ path('app_cart_new',{'id':item.product.id})}}"
+                            class="btn btn-success btn-sm">+</a>
+                             <a href="{{ path('app_cart_subtract',{'id':item.product.id})}}"
+                            class="btn btn-danger btn-sm">-</a>
+                            </td>
+                            <td> {{ item.product.price|number_format(2, '.', ',') }} € </td>
+                            <td> {{ (item.product.price * item.quantity)|number_format(2, '.', ',') }} € </td>
+                        <td>
+                        <!-- Bouton pour supprimer un produit du panier -->
+                        <a href="{{ path('app_cart_remove', {'id':item.product.id})
+                        }}" class="btn btn-danger btn-sm">Supprimer</a>
+                        </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+ 
+            <div class="d-flex justify-content-end">
+                <h4>Total : {{ total|number_format(2, '.', ',') }}€</h4>
+            </div>
+ 
+            <div class="d-flex- justify-content-end mt-3">
+                <a data-turbo="false" href="{{ path('app_order') }}" class="btn btn-primary">Valider et Payer</a>
+                &nbsp
+                <a href="{{ path('app_cart_clear')}}" class="btn btn-danger">
+                Vider le panier</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

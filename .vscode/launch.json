@@ -10,7 +10,8 @@
             "request": "launch",
             "port": 9003,
             "pathMappings": {
-            "C:\\Users\\lchamprobert\\symfony1": "${workspaceFolder}"
+            "C:\\Users\\lchamprobert\\symphony1": "${workspaceFolder}"
+          
             }
         }
     ] 

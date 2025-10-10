@@ -7,38 +7,86 @@
 
     <div class="collapse navbar-collapse" id="navbarScroll">
       <ul class="navbar-nav me-auto my-2 my-lg-0 navbar-nav-scroll" style="--bs-scroll-height: 100px;">
+        
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="{{ path('app_home') }}">Accueil</a>
         </li>
 
+        
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Catégories
+          </a>
+          <ul class="dropdown-menu">
+            {% for category in categories %}
+              <li>
+                <a class="dropdown-item text-success" href="{{ path('app_home_product_show',{'id': category.id }) }}">{{ category.name }}</a>
+              </li>
+              {% for subCategory in category.subCategories %}
+                <li>
+                  <a class="dropdown-item" href="{{ path('app_home_product_filter', {'id': subCategory.id}) }}">
+                    {{ subCategory.name }}
+                  </a>
+                </li>
+              {% endfor %}
+            {% endfor %}
+            <li><hr class="dropdown-divider"></li>
+          </ul>
+        </li>
         <li class="nav-item dropdown">
           {% if is_granted('ROLE_ADMIN') %}
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrateur</a>
-              <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ path('app_category') }}">Catégories</a></li>
-                  <li><a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a></li>
-                  <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Administrateur
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ path('app_category') }}">Catégories</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_sub_category_index') }}">Sous-Catégories</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_product_index') }}">Produits</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_city_index') }}">Ville</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_orders') }}">Commandes</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ path('app_user') }}">Utilisateurs</a></li>
+            </ul>
 
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ path('app_user') }}">Utilisateurs</a></li>
-              </ul>
           {% elseif is_granted('ROLE_EDITOR') %}
-              <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Editeur</a>
-              <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="{{ path('app_category') }}">Catégories</a></li>
-                  <li><a class="dropdown-item" href="{{ path('app_product_index')}}">Produits</a></li>
-                  <li><hr class="dropdown-divider"></li>
-                  <li><a class="dropdown-item" href="{{ path('app_user') }}">Utilisateurs</a></li>
-              </ul>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Editeur
+            </a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="{{ path('app_category') }}">Catégories</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_product_index') }}">Produits</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_city_index') }}">Villes</a></li>
+              <li><a class="dropdown-item" href="{{ path('app_orders') }}">Commandes</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ path('app_user') }}">Utilisateurs</a></li>
+              
+            </ul>
+
           {% else %}
-             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Utilisateur</a>
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Utilisateur
+            </a>
           {% endif %}
         </li>
-      </ul>
+        {% if app.user == false %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_register') }}">Inscription<a/>
+          </li>
+          <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+          </li>
+        {% endif %}{% if app.user == true %}
+          <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">Déconnexion</a>
+          </li>
+           <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_cart') }}">Panier</a> 
+          </li>
+        {% endif %}
 
+      </ul>
+      
       <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
+        <button class="btn btn-outline-success" type="submit">Recherche</button>
       </form>
     </div>
   </div>

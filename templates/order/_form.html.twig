@@ -1,0 +1,23 @@
+{{ form_start(form,{"attr":{'data-turbo':'false'}} ) }}
+    <label for="">Prénom : </label>
+{{ form_widget(form.firstName,{'attr':{'class':'form form-control', 
+    'placeholder':"prénom"}}) }}
+    {{ form_errors(form.firstName) }}
+    <br>
+    <label for="">Nom : </label>
+    {{ form_widget(form.lastName,{'attr':{'class':'form form-control','placeholder':"Nom"}}) }}
+    <br>
+     <label for="">Téléphone : </label>
+    {{ form_widget(form.phoneNumber,{'attr':{'class':'form form-control','placeholder':"Téléphone"}}) }}
+    <br>
+    <label for="">Adresse : </label>
+    {{ form_widget(form.adress,{'attr':{'class':'form form-control','placeholder':"Adresse"}}) }}
+    <br>
+    <label for="">Ville: </label>
+    {{ form_widget(form.city,{'attr':{'class':'form form-control'}}) }}
+    <br>
+
+    <button class="btn btn-primary">{{ button_label|default('Payer') }}</button>
+
+{{ form_end(form) }}
+    

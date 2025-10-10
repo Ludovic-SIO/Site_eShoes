@@ -1,0 +1,46 @@
+<style>
+    table{
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td{
+        border: ©.0625em solid #ddd;
+    }
+    thead{
+        background:rgb(194, 194, 194);
+    }
+    tbody tr:nth-child(even){
+        background:rgb(235, 235, 235);
+    }
+</style>
+
+<div>
+    <h2>Confirmation de commande</h2>
+    <p>
+            Bonjour {{ order.firstName }} {{ order.lastName }}.
+            Votre commande est confirmée.
+    </p>
+    <h3>Commande n° {{ order.id }} du {{ order.createdAt|date("d/m/Y G:i:s") }}</h3>
+    <h3>Produits commandés : </h3>
+    <table class="table table-bordered">
+        <thead align="left">
+            <tr>
+                <th>Nom produit</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Prix Total</th>
+            </tr>
+        </thead>
+        {% for product in order.orderProducts %}
+            <tr>
+                <td>{{ product.product.name }}</td>
+                <td>{{ product.product.price }} €</td>
+                <td>{{ product.qte }}</td>
+                <td>{{ product.price * product.qte }} €</td>
+            </tr>
+        {% endfor %}
+    </table>
+    <h3>Frais de port : {{ order.shippingPrice }} €</h3>
+    <hr>
+    <h3>Total à payer : {{ order.totalPrice }} €</h3>
+</div>

@@ -1,0 +1,85 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 0.0625em solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    thead {
+        background: rgb(194, 194, 194);
+    }
+    tbody tr:nth-child(even) {
+        background: rgb(235, 235, 235);
+    }
+</style>
+
+<div>
+    <h2>Facture</h2>
+    <hr>
+    <h3>Commande n° {{ order.id }} du {{ order.createdAt|date("d/m/Y G:i:s") }}</h3>
+
+    {% if order.isDelivered %}
+        <h3 class="text-success">Commande livrée</h3>
+    {% else %}
+        <h3 class="text-danger">Commande en attente de livraison</h3>
+    {% endif %}
+
+    <span>Informations client :</span>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th>Téléphone</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ order.id }}</td>
+                <td>{{ order.lastName }}</td>
+                <td>{{ order.firstName }}</td>
+                <td>{{ order.adress }}</td>
+                <td>{{ order.city.zipCode }} {{ order.city.name }}</td>
+                <td>{{ order.phoneNumber }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br>
+
+    <span>Produits commandés :</span>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nom produit</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Prix Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in order.orderProducts %}
+                <tr>
+                    <td>{{ product.product.name }}</td>
+                    <td>{{ product.product.price|number_format(2, ',', ' ') }} €</td>
+                    <td>{{ product.qte }}</td>
+                    <td>{{ (product.price * product.qte)|number_format(2, ',', ' ') }} €</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h5>Frais de port : {{ order.shippingPrice|number_format(2, ',', ' ') }} €</h5>
+
+    <hr>
+
+    <h5>Total à payer : {{ order.totalPrice|number_format(2, ',', ' ') }} €</h5>
+
+    <br>
+</div>

@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+<div class="container">
+    <br>
+    <h1>Commandes</h1>
+    {% include 'layouts/_flash_message.html.twig' %}
+    <br>
+
+    {% if orders is empty %}
+        <h2>Aucune commande à afficher</h2>
+    {% else %}
+        {% for order in orders %}
+            <h3>Commande n° {{ order.id }} du {{ order.createdAt|date("d/m/Y G:i:s") }}</h3>
+
+            {% if order.isDelivered %}
+                <h3 class="text-success">Commande livrée</h3>
+            {% else %}
+                <h3 class="text-danger">Commande en attente de livraison</h3>
+            {% endif %}
+
+            <span>Informations client :</span>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Adresse</th>
+                        <th>Ville</th>
+                        <th>Téléphone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.lastName }}</td>
+                        <td>{{ order.firstName }}</td>
+                        <td>{{ order.adress }}</td>
+                        <td>{{ order.city.zipCode }} {{ order.city.name }}</td>
+                        <td>{{ order.phoneNumber }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <br>
+            <span>Produits commandés :</span>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Image produit</th>
+                        <th>Nom produit</th>
+                        <th>Prix unitaire</th>
+                        <th>Quantité</th>
+                        <th>Prix total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in order.orderProducts %}
+                        <tr>
+                            <td>
+                                <img style="width:100%; max-width:80px; height:auto;"
+                                     src="{{ asset('Uploads/images/' ~ product.product.image) }}"
+                                     alt="{{ product.product.name }}">
+                            </td>
+                            <td>{{ product.product.name }}</td>
+                            <td>{{ product.product.price }} €</td>
+                            <td>{{ product.qte }}</td>
+                            <td>{{ (product.price * product.qte)|number_format(2, ',', ' ') }} €</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <h5>Frais de port : {{ order.shippingPrice }} €</h5>
+            <h5>Total à payer : {{ order.totalPrice }} €</h5>
+
+            <br>
+
+            {% if not order.isDelivered %}
+                <a class="btn btn-outline-primary"
+                   href="{{ path('app_orders_is_delivered_update', {'id': order.id}) }}">Marquer comme livrée
+                </a>
+            {% endif %}
+            {{ include('order/_delete_form.html.twig', { order: order }) }}
+
+            <hr>
+        {% endfor %}
+    {% endif %}
+
+    <br>
+    <a class="btn btn-dark" href="{{ path('app_home') }}">Retour</a>
+    <br>
+</div>
+{% endblock %}
