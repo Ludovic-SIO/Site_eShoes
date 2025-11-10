@@ -3,47 +3,94 @@
 {% block title %}Produits{% endblock %}
 
 {% block body %}
-    <h1>Produits</h1>
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="section-title mb-0">Gestion des Produits</h1>
+        <a href="{{ path('app_product_new') }}" class="btn btn-dark">
+            <i class="bi bi-plus-circle me-2"></i>Nouveau produit
+        </a>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Prix</th>
-                <th>Stock</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for product in products %}
-            <tr>
-                <td>{{ product.id }}</td>
-                <td>{{ product.name }}</td>
-                <td>{{ product.description|slice(0,100)}}</td>
-                <td>{{ product.price }}</td>
-
-                {% if product.stock > 0 %}
-                        <td>{{ product.stock }}</td>
-                {% else %}
-                <td>
-                    <span class="text-danger">Stock épuisé</span>
-                </td>
-                {% endif %}
-                <td>
-                    <a class ="btn btn-outline-primary" href="{{ path('app_product_show', {'id': product.id}) }}">Afficher</a>
-                    <a "btn btn-outline-secondary" href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
-                    <a class="btn btn-outline-info" href="{{ path('app_product_stock_add',{'id': product.id}) }}">Ajout stock</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucun produit trouvés</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_product_new') }}">Créer un nouveau produit</a>
+    {% if products|length > 0 %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="border-top: none;">ID</th>
+                                <th style="border-top: none;">Image</th>
+                                <th style="border-top: none;">Nom</th>
+                                <th style="border-top: none;">Description</th>
+                                <th style="border-top: none;">Prix</th>
+                                <th style="border-top: none;">Stock</th>
+                                <th style="border-top: none;" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                                <tr>
+                                    <td><strong>#{{ product.id }}</strong></td>
+                                    <td>
+                                        {% if product.image %}
+                                            <img src="{{ asset('uploads/images/' ~ product.image) }}" 
+                                                 alt="{{ product.name }}" 
+                                                 style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                                        {% else %}
+                                            <div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        {% endif %}
+                                    </td>
+                                    <td><strong>{{ product.name }}</strong></td>
+                                    <td>
+                                        <span class="text-muted">
+                                            {{ product.description|slice(0, 50) }}{% if product.description|length > 50 %}...{% endif %}
+                                        </span>
+                                    </td>
+                                    <td><strong>{{ product.price|number_format(2, ',', ' ') }} €</strong></td>
+                                    <td>
+                                        {% if product.stock > 0 %}
+                                            <span class="badge bg-success">{{ product.stock }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Épuisé</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-sm btn-outline-primary" 
+                                               href="{{ path('app_product_show', {'id': product.id}) }}"
+                                               title="Afficher">
+                                                <i class="bi bi-eye"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-secondary" 
+                                               href="{{ path('app_product_edit', {'id': product.id}) }}"
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-info" 
+                                               href="{{ path('app_product_stock_add',{'id': product.id}) }}"
+                                               title="Ajouter du stock">
+                                                <i class="bi bi-plus-circle"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 5rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <h3 class="mb-3">Aucun produit</h3>
+            <p class="text-muted mb-4">Commencez par créer votre premier produit</p>
+            <a href="{{ path('app_product_new') }}" class="btn btn-dark btn-lg">
+                <i class="bi bi-plus-circle me-2"></i>Créer un produit
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

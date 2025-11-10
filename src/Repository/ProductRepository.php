@@ -16,6 +16,24 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    /**
+     * Retourne un QueryBuilder pour la recherche de produits par terme.
+     * Recherche dans le nom et la description (LIKE %term%).
+     * Utile pour la pagination (retourne le QueryBuilder, pas le résultat exécuté).
+     *
+     * @param string $term
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function searchByTerm(string $term)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->andWhere('p.name LIKE :term OR p.description LIKE :term')
+            ->setParameter('term', '%'.trim($term).'%')
+            ->orderBy('p.name', 'ASC');
+
+        return $qb;
+    }
+
     //    /**
     //     * @return Product[] Returns an array of Product objects
     //     */

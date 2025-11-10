@@ -1,37 +1,77 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Produits{% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-    <h1>Produits</h1>
+<div class="container py-5">
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card shadow-sm">
+                {% if product.image %}
+                    <img src="{{ asset('uploads/images/' ~ product.image) }}" 
+                         class="card-img-top img-fluid" 
+                         alt="{{ product.name }}"
+                         style="border-radius: 12px 12px 0 0;">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center" style="height: 400px; background: #f8f9fa;">
+                        <i class="bi bi-image" style="font-size: 5rem; color: #ccc;"></i>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-box-seam me-2"></i>Détails du produit</h5>
+                </div>
+                <div class="card-body">
+                    <h2 class="mb-3">{{ product.name }}</h2>
+                    <p class="text-muted mb-4">{{ product.description }}</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="p-3" style="background: #f8f9fa; border-radius: 8px;">
+                                <small class="text-muted d-block mb-1">Prix</small>
+                                <h4 class="mb-0 text-primary">{{ product.price|number_format(2, ',', ' ') }} €</h4>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-3" style="background: #f8f9fa; border-radius: 8px;">
+                                <small class="text-muted d-block mb-1">Stock</small>
+                                {% if product.stock > 0 %}
+                                    <span class="badge bg-success p-2" style="font-size: 1rem;">
+                                        <i class="bi bi-check-circle me-1"></i>{{ product.stock }} disponible{{ product.stock > 1 ? 's' : '' }}
+                                    </span>
+                                {% else %}
+                                    <span class="badge bg-danger p-2" style="font-size: 1rem;">
+                                        <i class="bi bi-x-circle me-1"></i>Rupture de stock
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Identifiant</th>
-                <td>{{ product.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ product.name }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ product.description}}</td>
-            </tr>
-            <tr>
-                <th>Prix</th>
-                <td>{{ product.price }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_product_stock_add_history',{'id' : product.id}) }}">Afficher l'historique des ajouts au stock</a>
-    <br>
-    <br>
-    <a href="{{ path('app_product_edit', {'id': product.id}) }}">Modifier</a>
-
-    {{ include('product/_delete_form.html.twig') }}
-    <br>
-    <a class="btn btn-dark" href="{{ path('app_product_index') }}">Retour</a>
+                    <div class="d-flex gap-2 flex-wrap">
+                        <a href="{{ path('app_product_stock_add_history',{'id' : product.id}) }}" 
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-clock-history me-2"></i>Historique
+                        </a>
+                        <a href="{{ path('app_product_edit', {'id': product.id}) }}" 
+                           class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Modifier
+                        </a>
+                        <a href="#" onclick="history.back(); return false;" 
+                           class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                        <div class="ms-auto">
+                            {{ include('product/_delete_form.html.twig') }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -3,36 +3,69 @@
 {% block title %}Liste des sous-catégories{% endblock %}
 
 {% block body %}
-<div class="container">
-    <br>
-<h1>Liste des sous-catégories</h1>
-{% include 'layouts/_flash_message.html.twig' %}
-    <br>
-    <table class="table">
-    </thead>
-    <tr>
-        <th>ID</th>
-        <th>Sous-catégorie</th>
-        <th>Catégorie</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-        {% for sub_category in sub_categories %}
-        <td>
-            <td>{{sub_category.id}}</td>
-            <td>{{sub_category.name}}</td>
-            <td>{{sub_category.category.name}}</td>
-            <td>
-                <a class="btn btn-outline-success" href="{{path('app_sub_category_show', {'id' : sub_category.id})}}"> Afficher<a/>
-                <a class="btn btn-outline-success" href="{{path('app_sub_category_show', {'id' : sub_category.id})}}"> Modifier<a/>
-            </td>
-        </tr>
-        {% else %}
-            <td colspan="3">Aucune sous-catégorie à afficher</tb>
-        {% endfor %}
-    </tbody>
-</table>
-    <a class="btn btn-outline-success" href="{{ path( 'app_sub_category_new') }}">Nouvelle sous-catégorie</a>
-</div> 
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="section-title mb-0">Gestion des Sous-Catégories</h1>
+        <a class="btn btn-dark" href="{{ path('app_sub_category_new') }}">
+            <i class="bi bi-plus-circle me-2"></i>Nouvelle sous-catégorie
+        </a>
+    </div>
+    
+    {% include 'layouts/_flash_message.html.twig' %}
+
+    {% if sub_categories|length > 0 %}
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="border-top: none;">ID</th>
+                                <th style="border-top: none;">Sous-catégorie</th>
+                                <th style="border-top: none;">Catégorie</th>
+                                <th style="border-top: none;" class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sub_category in sub_categories %}
+                                <tr>
+                                    <td><strong>#{{ sub_category.id }}</strong></td>
+                                    <td>
+                                        <strong style="font-size: 1.1rem;">{{ sub_category.name }}</strong>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-secondary">{{ sub_category.category.name }}</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="btn-group" role="group">
+                                            <a class="btn btn-sm btn-outline-primary" 
+                                               href="{{ path('app_sub_category_show', {'id': sub_category.id}) }}"
+                                               title="Afficher">
+                                                <i class="bi bi-eye me-1"></i>Afficher
+                                            </a>
+                                            <a class="btn btn-sm btn-outline-secondary" 
+                                               href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}"
+                                               title="Modifier">
+                                                <i class="bi bi-pencil me-1"></i>Modifier
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="bi bi-folder-x" style="font-size: 5rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <h3 class="mb-3">Aucune sous-catégorie</h3>
+            <p class="text-muted mb-4">Commencez par créer votre première sous-catégorie</p>
+            <a href="{{ path('app_sub_category_new') }}" class="btn btn-dark btn-lg">
+                <i class="bi bi-plus-circle me-2"></i>Créer une sous-catégorie
+            </a>
+        </div>
+    {% endif %}
+</div>
 {% endblock %}

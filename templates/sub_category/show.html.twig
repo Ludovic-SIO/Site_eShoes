@@ -1,32 +1,68 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}SubCategory{% endblock %}
+{% block title %}{{ sub_category.name }}{% endblock %}
 
 {% block body %}
-<div class ="container">
-    <h1>Sous-catégorie</h1>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sub_category.id }}</td>
-            </tr>
-            <tr>
-                <th>Sous-catégorie</th>
-                <td>{{ sub_category.name }}</td>
-            </tr>
-            <tr>
-                <th>Catégorie</th>
-                <td>{{ sub_category.category.name }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_sub_category_index') }}">back to list</a>
-
-    <a href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}">Modifier</a>
-
-    {{ include('sub_category/_delete_form.html.twig') }}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-tag me-2"></i>Détails de la sous-catégorie</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-borderless">
+                        <tbody>
+                            <tr>
+                                <th style="width: 200px;">ID</th>
+                                <td><strong>#{{ sub_category.id }}</strong></td>
+                            </tr>
+                            <tr>
+                                <th>Sous-catégorie</th>
+                                <td>
+                                    <h4 class="mb-0">{{ sub_category.name }}</h4>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Catégorie parente</th>
+                                <td>
+                                    <span class="badge bg-secondary p-2" style="font-size: 1rem;">
+                                        {{ sub_category.category.name }}
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Nombre de produits</th>
+                                <td>
+                                    <span class="badge bg-info p-2" style="font-size: 1rem;">
+                                        {{ sub_category.products|length }} produit{{ sub_category.products|length > 1 ? 's' : '' }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">
+                    <h6 class="mb-0"><i class="bi bi-gear me-2"></i>Actions</h6>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ path('app_sub_category_edit', {'id': sub_category.id}) }}" class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Modifier
+                        </a>
+                        <a href="#" onclick="history.back(); return false;" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour
+                        </a>
+                        {{ include('sub_category/_delete_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

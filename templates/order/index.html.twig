@@ -3,58 +3,103 @@
 {% block title %}Commande{% endblock %}
 
 {% block body %}
-    <div class = "container">
-        <br>
-        <div class="col-4">
-            <h4>Montant de la commande : {{ total|number_format(2,'.',',') }}€</h4>
-            <strong>
-                Frais de livraison : <span id="shipping-cost"></span>
-            </strong>
-            <h4>
-                Montant total : <span id="total-cost"></span>
-            </h4>
-        </div>
+    <div class="container py-5">
+        <h1 class="section-title mb-4">Finaliser la commande</h1>
+        
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Informations de livraison</h5>
+                    </div>
+                    <div class="card-body p-4">
+                        {{ include('order/_form.html.twig') }}
+                    </div>
+                </div>
+            </div>
 
-        {{ include('order/_form.html.twig') }}
-        <br>
-        <a class="btn btn-dark" href="{{ path('app_cart') }}">Retour</a>
+            <div class="col-lg-4">
+                <div class="card shadow-sm sticky-top" style="top: 100px;">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="mb-0"><i class="bi bi-receipt me-2"></i>Résumé</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Sous-total</span>
+                            <span class="fw-bold">{{ total|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Frais de livraison</span>
+                            <span class="fw-bold" id="shipping-cost">-</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fw-bold">Total</span>
+                            <span class="fw-bold" style="font-size: 1.25rem; color: var(--accent-purple);" id="total-cost">
+                                {{ total|number_format(2, ',', ' ') }} €
+                            </span>
+                        </div>
+                        <div class="p-3" style="background: #f8f9fa; border-radius: 8px;">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="bi bi-shield-check me-2 text-success"></i>
+                                <small>Paiement sécurisé</small>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-lock me-2 text-primary"></i>
+                                <small>Données cryptées</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
     document.addEventListener('DOMContentLoaded', function () {
-    const citySelect = document.getElementById('order_city');
-    const shippingCostDisplay = document.getElementById('shipping-cost');
-    const shippingCostForm = document.getElementById('order_shippingPrice');
-    const totalCostDisplay = document.getElementById('total-cost');
+        const citySelect = document.getElementById('order_city');
+        const shippingCostDisplay = document.getElementById('shipping-cost');
+        const shippingCostForm = document.getElementById('order_shippingPrice');
+        const totalCostDisplay = document.getElementById('total-cost');
 
-    function updateShippingCost(city) {
-        fetch('{{ path('get_shipping_cost') }}', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
-            },
-            body: new URLSearchParams({ city:city })
-        })
-        .then(response => response.json())
-        .then(data => {
-            shippingCostDisplay.textContent = data.shippingCost + ' €';
-            shippingCostForm.value = data.shippingCost;
-            totalCostDisplay.textContent = ({{ total }} + parseFloat(data.shippingCost)).toFixed(2) + ' €';
-        })
-        .catch(error => {
-            console.error('Erreur lors de la récupération des frais de livraison :', error);
-        });
-    }
-    if (citySelect) {
-        citySelect.addEventListener('change', function () {
-            updateShippingCost(citySelect.options[citySelect.selectedIndex].value);
-        });
-      
-        if (citySelect.value) {
-            updateShippingCost(citySelect.options[citySelect.selectedIndex].value);
+        function updateShippingCost(city) {
+            if (!city) {
+                shippingCostDisplay.textContent = '-';
+                totalCostDisplay.textContent = '{{ total|number_format(2, ',', ' ') }} €';
+                return;
+            }
+
+            fetch('{{ path('get_shipping_cost') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: new URLSearchParams({ city: city })
+            })
+            .then(response => response.json())
+            .then(data => {
+                shippingCostDisplay.textContent = data.shippingCost + ' €';
+                if (shippingCostForm) {
+                    shippingCostForm.value = data.shippingCost;
+                }
+                const total = ({{ total }} + parseFloat(data.shippingCost)).toFixed(2);
+                totalCostDisplay.textContent = total.replace('.', ',') + ' €';
+            })
+            .catch(error => {
+                console.error('Erreur lors de la récupération des frais de livraison :', error);
+            });
         }
-    }
-});
-</script>
+
+        if (citySelect) {
+            citySelect.addEventListener('change', function () {
+                updateShippingCost(citySelect.options[citySelect.selectedIndex].value);
+            });
+          
+            if (citySelect.value) {
+                updateShippingCost(citySelect.options[citySelect.selectedIndex].value);
+            }
+        }
+    });
+    </script>
 {% endblock %}

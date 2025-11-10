@@ -1,23 +1,55 @@
-{{ form_start(form,{"attr":{'data-turbo':'false'}} ) }}
-    <label for="">Prénom : </label>
-{{ form_widget(form.firstName,{'attr':{'class':'form form-control', 
-    'placeholder':"prénom"}}) }}
-    {{ form_errors(form.firstName) }}
-    <br>
-    <label for="">Nom : </label>
-    {{ form_widget(form.lastName,{'attr':{'class':'form form-control','placeholder':"Nom"}}) }}
-    <br>
-     <label for="">Téléphone : </label>
-    {{ form_widget(form.phoneNumber,{'attr':{'class':'form form-control','placeholder':"Téléphone"}}) }}
-    <br>
-    <label for="">Adresse : </label>
-    {{ form_widget(form.adress,{'attr':{'class':'form form-control','placeholder':"Adresse"}}) }}
-    <br>
-    <label for="">Ville: </label>
-    {{ form_widget(form.city,{'attr':{'class':'form form-control'}}) }}
-    <br>
+{{ form_start(form, {"attr": {'data-turbo': 'false', 'class': 'needs-validation'}}) }}
+    <div class="row g-3">
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Prénom <span class="text-danger">*</span></label>
+            {{ form_widget(form.firstName, {'attr': {
+                'class': 'form-control form-control-lg' ~ (form_errors(form.firstName) ? ' is-invalid' : ''),
+                'placeholder': 'Prénom'
+            }}) }}
+            {{ form_errors(form.firstName) }}
+        </div>
 
-    <button class="btn btn-primary">{{ button_label|default('Payer') }}</button>
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Nom <span class="text-danger">*</span></label>
+            {{ form_widget(form.lastName, {'attr': {
+                'class': 'form-control form-control-lg' ~ (form_errors(form.lastName) ? ' is-invalid' : ''),
+                'placeholder': 'Nom'
+            }}) }}
+            {{ form_errors(form.lastName) }}
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Téléphone <span class="text-danger">*</span></label>
+            {{ form_widget(form.phoneNumber, {'attr': {
+                'class': 'form-control form-control-lg' ~ (form_errors(form.phoneNumber) ? ' is-invalid' : ''),
+                'placeholder': '06 12 34 56 78'
+            }}) }}
+            {{ form_errors(form.phoneNumber) }}
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label fw-bold">Ville <span class="text-danger">*</span></label>
+            {{ form_widget(form.city, {'attr': {
+                'class': 'form-select form-select-lg' ~ (form_errors(form.city) ? ' is-invalid' : '')
+            }}) }}
+            {{ form_errors(form.city) }}
+        </div>
+
+        <div class="col-12">
+            <label class="form-label fw-bold">Adresse <span class="text-danger">*</span></label>
+            {{ form_widget(form.adress, {'attr': {
+                'class': 'form-control form-control-lg' ~ (form_errors(form.adress) ? ' is-invalid' : ''),
+                'placeholder': 'Numéro et nom de rue'
+            }}) }}
+            {{ form_errors(form.adress) }}
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-dark btn-lg w-100">
+            <i class="bi bi-credit-card me-2"></i>{{ button_label|default('Procéder au paiement') }}
+        </button>
+    </div>
 
 {{ form_end(form) }}
     

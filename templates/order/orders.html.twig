@@ -3,95 +3,127 @@
 {% block title %}Commandes{% endblock %}
 
 {% block body %}
-<div class="container">
-    <br>
-    <h1>Commandes</h1>
+<div class="container py-5">
+    <h1 class="section-title mb-4">Mes Commandes</h1>
     {% include 'layouts/_flash_message.html.twig' %}
-    <br>
 
     {% if orders is empty %}
-        <h2>Aucune commande à afficher</h2>
+        <div class="text-center py-5">
+            <i class="bi bi-inbox" style="font-size: 5rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <h3 class="mb-3">Aucune commande</h3>
+            <p class="text-muted mb-4">Vous n'avez pas encore passé de commande</p>
+            <a href="{{ path('app_home') }}" class="btn btn-dark btn-lg">
+                <i class="bi bi-arrow-left me-2"></i>Découvrir nos produits
+            </a>
+        </div>
     {% else %}
         {% for order in orders %}
-            <h3>Commande n° {{ order.id }} du {{ order.createdAt|date("d/m/Y G:i:s") }}</h3>
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-0">
+                            <i class="bi bi-receipt me-2"></i>Commande n° {{ order.id }}
+                        </h5>
+                        <small class="text-white-50">Passée le {{ order.createdAt|date("d/m/Y à H:i") }}</small>
+                    </div>
+                    <div>
+                        {% if order.isDelivered %}
+                            <span class="badge bg-success p-2">
+                                <i class="bi bi-check-circle me-1"></i>Livrée
+                            </span>
+                        {% else %}
+                            <span class="badge bg-warning p-2">
+                                <i class="bi bi-clock me-1"></i>En attente
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
 
-            {% if order.isDelivered %}
-                <h3 class="text-success">Commande livrée</h3>
-            {% else %}
-                <h3 class="text-danger">Commande en attente de livraison</h3>
-            {% endif %}
+                <div class="card-body">
+                    {# Informations client #}
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3"><i class="bi bi-person me-2"></i>Informations client</h6>
+                            <div class="p-3" style="background: #f8f9fa; border-radius: 8px;">
+                                <p class="mb-1"><strong>{{ order.firstName }} {{ order.lastName }}</strong></p>
+                                <p class="mb-1 text-muted small">{{ order.adress }}</p>
+                                <p class="mb-1 text-muted small">{{ order.city.zipCode }} {{ order.city.name }}</p>
+                                <p class="mb-0 text-muted small">
+                                    <i class="bi bi-telephone me-1"></i>{{ order.phoneNumber }}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="text-muted mb-3"><i class="bi bi-cart me-2"></i>Résumé</h6>
+                            <div class="p-3" style="background: #f8f9fa; border-radius: 8px;">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Sous-total:</span>
+                                    <span>{{ (order.totalPrice - order.shippingPrice)|number_format(2, ',', ' ') }} €</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Frais de port:</span>
+                                    <span>{{ order.shippingPrice|number_format(2, ',', ' ') }} €</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between">
+                                    <strong>Total:</strong>
+                                    <strong style="font-size: 1.1rem; color: var(--accent-purple);">
+                                        {{ order.totalPrice|number_format(2, ',', ' ') }} €
+                                    </strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-            <span>Informations client :</span>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Nom</th>
-                        <th>Prénom</th>
-                        <th>Adresse</th>
-                        <th>Ville</th>
-                        <th>Téléphone</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.lastName }}</td>
-                        <td>{{ order.firstName }}</td>
-                        <td>{{ order.adress }}</td>
-                        <td>{{ order.city.zipCode }} {{ order.city.name }}</td>
-                        <td>{{ order.phoneNumber }}</td>
-                    </tr>
-                </tbody>
-            </table>
+                    {# Produits commandés #}
+                    <h6 class="text-muted mb-3"><i class="bi bi-box-seam me-2"></i>Produits commandés</h6>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Produit</th>
+                                    <th>Prix unitaire</th>
+                                    <th>Quantité</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order.orderProducts %}
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img style="width: 60px; height: 60px; object-fit: cover; border-radius: 8px;"
+                                                     src="{{ asset('uploads/images/' ~ product.product.image) }}"
+                                                     alt="{{ product.product.name }}">
+                                                <div>
+                                                    <strong>{{ product.product.name }}</strong>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{ product.product.price|number_format(2, ',', ' ') }} €</td>
+                                        <td>{{ product.qte }}</td>
+                                        <td class="text-end fw-bold">
+                                            {{ (product.price * product.qte)|number_format(2, ',', ' ') }} €
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
 
-            <br>
-            <span>Produits commandés :</span>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Image produit</th>
-                        <th>Nom produit</th>
-                        <th>Prix unitaire</th>
-                        <th>Quantité</th>
-                        <th>Prix total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for product in order.orderProducts %}
-                        <tr>
-                            <td>
-                                <img style="width:100%; max-width:80px; height:auto;"
-                                     src="{{ asset('Uploads/images/' ~ product.product.image) }}"
-                                     alt="{{ product.product.name }}">
-                            </td>
-                            <td>{{ product.product.name }}</td>
-                            <td>{{ product.product.price }} €</td>
-                            <td>{{ product.qte }}</td>
-                            <td>{{ (product.price * product.qte)|number_format(2, ',', ' ') }} €</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <h5>Frais de port : {{ order.shippingPrice }} €</h5>
-            <h5>Total à payer : {{ order.totalPrice }} €</h5>
-
-            <br>
-
-            {% if not order.isDelivered %}
-                <a class="btn btn-outline-primary"
-                   href="{{ path('app_orders_is_delivered_update', {'id': order.id}) }}">Marquer comme livrée
-                </a>
-            {% endif %}
-            {{ include('order/_delete_form.html.twig', { order: order }) }}
-
-            <hr>
+                    {# Actions #}
+                    <div class="mt-4 d-flex gap-2">
+                        {% if not order.isDelivered %}
+                            <a class="btn btn-success"
+                               href="{{ path('app_orders_is_delivered_update', {'id': order.id}) }}">
+                                <i class="bi bi-check-circle me-1"></i>Marquer comme livrée
+                            </a>
+                        {% endif %}
+                        {{ include('order/_delete_form.html.twig', { order: order }) }}
+                    </div>
+                </div>
+            </div>
         {% endfor %}
     {% endif %}
-
-    <br>
-    <a class="btn btn-dark" href="{{ path('app_home') }}">Retour</a>
-    <br>
 </div>
 {% endblock %}

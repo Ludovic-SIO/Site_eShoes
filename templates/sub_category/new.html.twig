@@ -3,13 +3,25 @@
 {% block title %}Ajout sous-catégorie{% endblock %}
 
 {% block body %}
-<div class ="container">
-    <br>
-        <h1>Ajouter une sous-catégorie</h1>
-    <br>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="section-title mb-0">Créer une nouvelle sous-catégorie</h1>
+                <a href="{{ path('app_sub_category_index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                </a>
+            </div>
 
-    {{ include('sub_category/_form.html.twig') }}
-
-    <a class="btn btn-dark" href="{{ path('app_sub_category_index') }}">Retour</a>
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Informations de la sous-catégorie</h5>
+                </div>
+                <div class="card-body p-4">
+                    {{ include('sub_category/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

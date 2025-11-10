@@ -6,13 +6,14 @@
     <br>
     <h1>Ajouter au stock de {{product.name}}</h1>
     <br>
-    {{form_start(form)}}
-
-        <label for="">Quantité : "</label>
-        {{ form_widget(form.qte,{'attr':{'class':'form form-control'}})}}
-    <br>
-    <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
-    {{form_end(form)}}
+    {{ form_start(form) }}
+        <div class="mb-3">
+            <label class="form-label">Quantité</label>
+            {{ form_widget(form.qte, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.qte) }}
+        </div>
+        <button class="btn btn-success">{{ button_label|default('Enregistrer') }}</button>
+    {{ form_end(form) }}
 </div>
 
 

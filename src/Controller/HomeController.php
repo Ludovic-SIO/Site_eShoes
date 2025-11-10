@@ -18,16 +18,28 @@ final class HomeController extends AbstractController
     #[Route('/', name: 'app_home', methods:['GET'])]
     public function index(ProductRepository $productRepository, CategoryRepository $categoryRepository, Request $request, PaginatorInterface $paginator ): Response
     {
-        $data = $productRepository->findBy([],['name'=>"ASC"]);
-        $products =$paginator->paginate(
+        // Récupère le terme de recherche en GET (?q=...)
+        $q = $request->query->get('q');
+
+        if ($q) {
+            // utilise le QueryBuilder retourné par le repository pour permettre la pagination
+            $data = $productRepository->searchByTerm($q);
+        } else {
+            $data = $productRepository->createQueryBuilder('p')
+                ->orderBy('p.name', 'ASC');
+        }
+
+        $products = $paginator->paginate(
             $data,
             $request->query->getInt('page', 1),
             12
         );
+
         return $this->render('home/index.html.twig', [
             'products' => $products,
             'categories' => $categoryRepository->findAll(),
-        ]); 
+            'q' => $q,
+        ]);
     }
 
     #[Route('/home/product/{id}:show', name: 'app_home_product_show', methods:['GET'])]

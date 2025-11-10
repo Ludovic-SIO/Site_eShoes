@@ -1,11 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New City{% endblock %}
+{% block title %}Nouvelle ville{% endblock %}
 
 {% block body %}
-    <h1>Create new City</h1>
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="section-title mb-0">Créer une nouvelle ville</h1>
+                <a href="{{ path('app_city_index') }}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                </a>
+            </div>
 
-    {{ include('city/_form.html.twig') }}
-
-    <a href="{{ path('app_city_index') }}">back to list</a>
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="bi bi-plus-circle me-2"></i>Informations de la ville</h5>
+                </div>
+                <div class="card-body p-4">
+                    {{ include('city/_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

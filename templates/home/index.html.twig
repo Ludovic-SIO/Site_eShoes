@@ -1,38 +1,93 @@
 {% extends 'base.html.twig' %}
 
-{% block title %} Home {% endblock %}
+{% block title %}Accueil{% endblock %}
 
 {% block body %}
+{% if q is not defined or not q %}
+    {# Section Hero - uniquement sur la page d'accueil sans recherche #}
+    <div class="hero-section">
+        <div class="hero-content">
+            <div style="font-size: 3rem; font-weight: 900; margin-bottom: 0.5rem;">-15%</div>
+            <h1 class="hero-title">BLACK FRIDAY</h1>
+            <p class="hero-subtitle">-15% SUR TOUT LE SITE</p>
+            <a href="#products" class="hero-cta">DÉCOUVRIR</a>
+        </div>
+    </div>
+
+    {# Section Nouveautés #}
+    <div class="container" id="products">
+        <h2 class="section-title">NOUVEAUTÉS</h2>
+    </div>
+{% endif %}
+
 <div class="container">
-<br>
-    <h1>Produits</h1>
-    <div class="row">
+    {% if q is defined and q %}
+        <h2 class="section-title">Résultats de recherche pour "{{ q }}"</h2>
+    {% endif %}
+
+    <div class="row g-4">
         {% for product in products %}
-            <div class="col-md-2 mt-4">
-                <div class="card" style="width: 20vh;">
-                    {% if product.image %}
-                        <a href="{{ path('app_home_product_show', {'id' : product.id}) 
-                        }}"><img src="{{ asset ('uploads/images/' ~ product.image)}}"
-                        class="card-img-top" alt="{{ product.name }}"></a>
-                    {% else %}
-                        <img src="{{ asset ('upload/images/no_image_available_500x350.png')
-                        }}" class="card-img-top" alt="Placholder image">
-                    {% endif %}
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+                <div class="product-card">
+                    <div class="card-img-wrapper">
+                        {% if product.image %}
+                            <a href="{{ path('app_home_product_show', {'id' : product.id}) }}">
+                                <img src="{{ asset('uploads/images/' ~ product.image) }}" class="card-img-top" alt="{{ product.name }}">
+                            </a>
+                        {% else %}
+                            <img src="{{ asset('uploads/images/no_image_available_500x350.png') }}" class="card-img-top" alt="Placeholder image">
+                        {% endif %}
+                        
+                        {# Badges #}
+                        <div class="product-badges">
+                            <span class="badge-discount">-15%</span>
+                            <span class="badge-delivery">
+                                <i class="bi bi-clock"></i>
+                                48H
+                            </span>
+                        </div>
+                    </div>
+                    
                     <div class="card-body">
-                         <a style="text-decoration: none" href="{{
-                        path('app_home_product_show', {'id': product.id}) }}">
-                        <h5 class="card-title">{{ product.name }}</h5></a>
-                        <p class="card-text text-truncate">{{ product.description}}</p>
-                        <h3>{{ product.price }}</h3>
-                        <a href="{{path('app_cart_new', {'id' : product.id})}}" class="btn btn-outline-success">Ajouter au panier</a>
+                        {% set brandName = product.name|split(' ')|first %}
+                        <div class="product-brand">{{ brandName }}</div>
+                        <a href="{{ path('app_home_product_show', {'id': product.id}) }}" class="product-name">
+                            {{ product.name }}
+                        </a>
+                        
+                        <div class="product-price">
+                            {% set originalPrice = product.price / 0.85 %}
+                            <span class="price-current">à partir de {{ product.price|number_format(2, ',', ' ') }} €</span>
+                            <span class="price-original">{{ originalPrice|number_format(2, ',', ' ') }} €</span>
+                        </div>
+                        
+                        {% if product.stock > 0 %}
+                            <a href="{{ path('app_cart_new', {'id' : product.id}) }}" class="btn btn-dark w-100 mt-2">
+                                Ajouter au panier
+                            </a>
+                        {% else %}
+                            <button class="btn btn-secondary w-100 mt-2" disabled>
+                                Rupture de stock
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>
         {% else %}
-            <p>Aucun produit disponible.</p>
+            <div class="col-12">
+                {% if q is defined and q %}
+                    <p class="text-center py-5">Aucun produit trouvé pour "{{ q }}".</p>
+                {% else %}
+                    <p class="text-center py-5">Aucun produit disponible.</p>
+                {% endif %}
+            </div>
         {% endfor %}
     </div>
-    <br>
-        {{ knp_pagination_render(products,'layouts/pagination_template.html.twig') }}
-</div>  
+</div>
+
+{% if products|length > 0 %}
+    <div class="container mt-5">
+        {{ knp_pagination_render(products, 'layouts/pagination_template.html.twig') }}
+    </div>
+{% endif %}
 {% endblock %}

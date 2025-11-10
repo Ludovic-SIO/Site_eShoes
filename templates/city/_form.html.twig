@@ -1,4 +1,21 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    <div class="mb-3">
+        {{ form_label(form.name, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom'}}) }}
+        {{ form_errors(form.name) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.zipCode, 'Code postal', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.zipCode, {'attr': {'class': 'form-control', 'placeholder': 'Code postal'}}) }}
+        {{ form_errors(form.zipCode) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(form.shippingCost, 'Frais de livraison', {'label_attr': {'class': 'form-label'}}) }}
+        {{ form_widget(form.shippingCost, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 4.99'}}) }}
+        {{ form_errors(form.shippingCost) }}
+    </div>
+
+    <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
 {{ form_end(form) }}

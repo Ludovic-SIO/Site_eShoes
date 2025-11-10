@@ -1,29 +1,39 @@
 {{ form_start(form) }}
 
-<label for="">Nom du produit : </label>
-{{ form_widget(form.name, {'attr': {'class': 'form form-control', 'placeholder': 'nom'}}) }}
-{{ form_errors(form.name) }}
-<br>
-<label for="">Description : </label>
-{{ form_widget(form.description, {'attr': {'class': 'form form-control'}}) }}
-<br>
-<label for="">Prix : </label>
-{{ form_widget(form.price, {'attr': {'class': 'form form-control'}}) }}
-<br>
-{% if button_label is defined and button_label=='Modifier' %}
-    <label for="">Stock : </label>
-{{ form_widget(form.stock,{'attr' : {'class':'form form-control','readonly':true}})}}
-{% else %}
-    <label for="">Stock : </label>
-{{ form_widget(form.stock,{'attr' : {'class':'form form-control','readonly':false}})}}
-{% endif %}
-<br>
-<label for="">Sous-catégories : </label>
-{{ form_widget(form.subCategories, {'attr': {'class': 'form form-control'}}) }}
-<br>
-<label for="">Image : </label>
-{{ form_widget(form.image, {'attr': {'class': 'form form-control'}}) }}
-<br>
+<div class="mb-3">
+    <label class="form-label">Nom du produit</label>
+    {{ form_widget(form.name, {'attr': {'class': 'form-control', 'placeholder': 'Nom du produit'}}) }}
+    {{ form_errors(form.name) }}
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Description</label>
+    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Prix</label>
+    {{ form_widget(form.price, {'attr': {'class': 'form-control'}}) }}
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Stock</label>
+    {% if button_label is defined and button_label == 'Modifier' %}
+        {{ form_widget(form.stock, {'attr': {'class': 'form-control', 'readonly': true}}) }}
+    {% else %}
+        {{ form_widget(form.stock, {'attr': {'class': 'form-control'}}) }}
+    {% endif %}
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Sous-catégories</label>
+    {{ form_widget(form.subCategories, {'attr': {'class': 'form-select'}}) }}
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Image</label>
+    {{ form_widget(form.image, {'attr': {'class': 'form-control'}}) }}
+</div>
 
 <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
 

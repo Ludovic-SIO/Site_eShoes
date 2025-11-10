@@ -1,58 +1,127 @@
 {% extends 'base.html.twig' %}
-{% block title %} Home {% endblock %}
+{% block title %}{{ product.name }}{% endblock %}
 
 {% block body %}
-<div class="container">
-<div class="card mb-12 " style="margin-top: 3vh">
-        <div class="row g-0">
-            <div class="col-md-4">
-            {% if product.image %}
-                <img src="{{ asset ('uploads/images/' ~ product.image)}}"
-                class="card-img-top" alt="{{ product.name }}"></a>
-            {% else %}
-                    <img src="{{ asset ('upload/images/no_image_available_500x350.png')
-                    }}" class="card-img-top" alt="Placholder image">
-            {% endif %}
-            </div>
-            <div class="col-md-8"
-                <div class="card-body">
-                        <h1 class="card-title">{{ product.name }}</h1></a>
-                        <p class="card-text text-truncate">{{ product.description}}</p>
-                        <h3>{{ product.price }} €</h3>
-                        <a href="#" class="btn btn-outline-success">Ajouter au panier</a>
-                        <br><br>
-                        <a class="btn btn-dark" href="{{ path('app_home')}}">Retour</a>
-            </div>
-        </div>
-        
-</div>
-</div>  
-
-<br>
-<br>
-<h2> Derniers produits ajoutés</h2>
-<div class="row">
-    {% for product in products %}
-        <div class="col-md-2 mt-4">
-            <div class="card" style="width: 20vh;">
+<div class="container py-5">
+    <div class="row g-4">
+        {# Image produit #}
+        <div class="col-md-6">
+            <div class="product-detail-image-wrapper" style="position: relative; padding-top: 100%; background: #f8f9fa; border-radius: 8px; overflow: hidden;">
                 {% if product.image %}
-                <a href="{{ path('app_home_product_show', {'id' : product.id} )
-                }}"><img src="{{ asset('uploads/images/' ~ product.image)}}"
-                class="card-img-top" alt="{{ product.name }}">
+                    <img src="{{ asset('uploads/images/' ~ product.image) }}" 
+                         class="img-fluid" 
+                         alt="{{ product.name }}"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                 {% else %}
-                <img src="{{ asset('uploads/images/no_image_available_500x350.png')
-                }}"class="card-img-top" alt="Placeholder image">
+                    <img src="{{ asset('uploads/images/no_image_available_500x350.png') }}" 
+                         class="img-fluid" 
+                         alt="Placeholder image"
+                         style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;">
                 {% endif %}
-                <div class="card-body">
-                <a style="text-decoration: none" href="{{ path('app_home_product_show', {'id': product.id}) }}">
-                <h3>{{ product.price}} €</h3>
-                <a href="{{path('app_cart_new', {'id' : product.id})}}" class="btn btn-outline-success">Ajouter au panier</a>
+                <div class="product-badges" style="position: absolute; top: 15px; left: 15px; right: 15px;">
+                    <span class="badge-discount">-15%</span>
                 </div>
             </div>
         </div>
-    {% else %}
-        <p>Aucun produit disponible</p>
-    {% endfor %}
+
+        {# Informations produit #}
+        <div class="col-md-6">
+            <div class="product-detail-info">
+                {% set brandName = product.name|split(' ')|first %}
+                <div class="product-brand mb-2">{{ brandName }}</div>
+                <h1 class="product-detail-title mb-3">{{ product.name }}</h1>
+                
+                <p class="text-muted mb-4" style="line-height: 1.6;">{{ product.description }}</p>
+                
+                <div class="product-price mb-4">
+                    {% set originalPrice = product.price / 0.85 %}
+                    <span class="price-current" style="font-size: 2rem;">{{ product.price|number_format(2, ',', ' ') }} €</span>
+                    <span class="price-original" style="font-size: 1.25rem;">{{ originalPrice|number_format(2, ',', ' ') }} €</span>
+                </div>
+
+                <div class="mb-4">
+                    {% if product.stock > 0 %}
+                        <span class="badge bg-success p-2 mb-3" style="font-size: 0.9rem;">
+                            <i class="bi bi-check-circle me-1"></i>En stock : {{ product.stock }} disponible(s)
+                        </span>
+                    {% else %}
+                        <span class="badge bg-danger p-2 mb-3" style="font-size: 0.9rem;">
+                            <i class="bi bi-x-circle me-1"></i>Rupture de stock
+                        </span>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex gap-3 mb-4">
+                    {% if product.stock > 0 %}
+                        <a href="{{ path('app_cart_new', {'id': product.id}) }}" class="btn btn-dark btn-lg flex-fill">
+                            <i class="bi bi-bag me-2"></i>Ajouter au panier
+                        </a>
+                    {% else %}
+                        <button class="btn btn-secondary btn-lg flex-fill" disabled>
+                            <i class="bi bi-x-circle me-2"></i>Indisponible
+                        </button>
+                    {% endif %}
+                </div>
+
+                <div class="product-features mt-4 p-3" style="background: #f8f9fa; border-radius: 8px;">
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-truck me-2" style="color: var(--accent-blue); font-size: 1.2rem;"></i>
+                        <span>Livraison en 48h</span>
+                    </div>
+                    <div class="d-flex align-items-center mb-2">
+                        <i class="bi bi-arrow-repeat me-2" style="color: #28a745; font-size: 1.2rem;"></i>
+                        <span>14 jours pour changer d'avis</span>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-shield-check me-2" style="color: var(--accent-purple); font-size: 1.2rem;"></i>
+                        <span>Produit authentique et neuf</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    {# Section produits similaires #}
+    {% if products|length > 0 %}
+        <div class="mt-5 pt-5" style="border-top: 1px solid #e0e0e0;">
+            <h2 class="section-title mb-4">Derniers produits ajoutés</h2>
+            <div class="row g-4">
+                {% for relatedProduct in products %}
+                    <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                        <div class="product-card">
+                            <div class="card-img-wrapper">
+                                {% if relatedProduct.image %}
+                                    <a href="{{ path('app_home_product_show', {'id': relatedProduct.id}) }}">
+                                        <img src="{{ asset('uploads/images/' ~ relatedProduct.image) }}" 
+                                             class="card-img-top" 
+                                             alt="{{ relatedProduct.name }}">
+                                    </a>
+                                {% else %}
+                                    <img src="{{ asset('uploads/images/no_image_available_500x350.png') }}" 
+                                         class="card-img-top" 
+                                         alt="Placeholder image">
+                                {% endif %}
+                                <div class="product-badges">
+                                    <span class="badge-discount">-15%</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <a href="{{ path('app_home_product_show', {'id': relatedProduct.id}) }}" class="product-name" style="font-size: 0.85rem;">
+                                    {{ relatedProduct.name|length > 30 ? relatedProduct.name|slice(0, 30) ~ '...' : relatedProduct.name }}
+                                </a>
+                                <div class="product-price">
+                                    {% set originalPrice = relatedProduct.price / 0.85 %}
+                                    <span class="price-current" style="font-size: 1rem;">{{ relatedProduct.price|number_format(2, ',', ' ') }} €</span>
+                                </div>
+                                <a href="{{ path('app_cart_new', {'id': relatedProduct.id}) }}" class="btn btn-dark btn-sm w-100 mt-2">
+                                    Ajouter
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
