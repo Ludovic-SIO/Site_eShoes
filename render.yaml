@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: mon-symfony
+    env: production
+    runtime: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php bin/console cache:clear --env=prod
+    startCommand: php -S 0.0.0.0:10000 -t public
+    rootDir: .
+    envVars:
+      - key: APP_ENV
+        value: prod
+      - key: APP_DEBUG
+        value: 0
+      - key: APP_SECRET
+        generateValue: true
